@@ -1,24 +1,47 @@
 #include <bits/stdc++.h>
 
-const int N = 2000;
-int main() {
+const int N = 10000;
 
-    std::ofstream file("data/matrix_2000.txt");
+double randomDouble(double min, double max) {
+    return min + (double)rand() / RAND_MAX * (max - min);
+}
+
+int main() {
+    std::ofstream file("data/matrix_10000.txt");
     if (!file) {
-        std::cout<<"ko the tao file";
+        std::cout << "Không thể tạo file!";
         return 0;
     }
 
-    file<<N<<std::endl;
-
+    file << N << std::endl;
     srand(time(0));
-    for(int i = 0; i < N; i++) {
+
+    std::vector<std::vector<double>> A(N, std::vector<double>(N));
+    std::vector<double> b(N);
+    
+    // Tạo ma trận A với đường chéo trội
+    for (int i = 0; i < N; i++) {
+        double sum = 0.0;
         for (int j = 0; j < N; j++) {
-            int value = (rand() % 200 - 100);
-            file << value << " ";
+            if (i != j) {
+                A[i][j] = randomDouble(-5, 5);
+                sum += std::abs(A[i][j]);
+            }
         }
-        int bValue = (rand() % 200 - 100);
-        file << bValue << "\n";
+        A[i][i] = sum + randomDouble(5, 10); // Đảm bảo đường chéo trội
+    }
+
+    // Sinh vế phải b ngẫu nhiên
+    for (int i = 0; i < N; i++) {
+        b[i] = randomDouble(-100, 100);
+    }
+
+    // Ghi vào file
+    for (int i = 0; i < N; i++) {
+        for (int j = 0; j < N; j++) {
+            file << A[i][j] << " ";
+        }
+        file << b[i] << "\n";
     }
 
     file.close();
